@@ -1,3 +1,4 @@
+using Codenation.Challenge.Exceptions;
 using Source.Data;
 using Source.Domain;
 using System;
@@ -13,6 +14,11 @@ namespace Codenation.Challenge
 
         public void AddTeam(long id, string name, DateTime createDate, string mainShirtColor, string secondaryShirtColor)
         {
+            if (Data.teams.ContainsKey(id))
+            {
+                throw new UniqueIdentifierException();
+            }
+
             var team = new Team
             {
                 Id = id,
