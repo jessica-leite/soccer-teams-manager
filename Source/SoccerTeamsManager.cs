@@ -3,6 +3,7 @@ using Source.Data;
 using Source.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Codenation.Challenge
 {
@@ -58,7 +59,14 @@ namespace Codenation.Challenge
 
         public void SetCaptain(long playerId)
         {
-            throw new NotImplementedException();
+            if (!Data.players.ContainsKey(playerId))
+            {
+                throw new CaptainNotFoundException();
+            }
+
+            var teamId = Data.players[playerId].TeamId;
+
+            Data.teams[teamId].CaptainId = playerId;
         }
 
         public long GetTeamCaptain(long teamId)
