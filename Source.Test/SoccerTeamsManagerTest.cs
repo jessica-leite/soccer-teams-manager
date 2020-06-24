@@ -20,6 +20,24 @@ namespace Codenation.Challenge
         }
 
         [Fact]
+        public void Should_Be_Unique_Ids_For_Players()
+        {
+            var manager = new SoccerTeamsManager();
+            manager.AddTeam(2, "Time 2", DateTime.Now, "cor 1", "cor 2");
+            manager.AddPlayer(1, 2, "Player 1", new DateTime(1992, 5, 24), 100, 20000.99m);
+            Assert.Throws<UniqueIdentifierException>(() =>
+                manager.AddPlayer(1, 2, "Player 1", new DateTime(1992, 5, 24), 100, 20000.99m));
+        }
+
+        [Fact]
+        public void Should_Be_Valid_Team_When_Add_Player()
+        {
+            var manager = new SoccerTeamsManager();
+            Assert.Throws<TeamNotFoundException>(() =>
+                manager.AddPlayer(1, 2, "Player 1", new DateTime(1992, 5, 24), 100, 20000.99m));
+        }
+
+        [Fact]
         public void Should_Be_Valid_Player_When_Set_Captain()
         {
             var manager = new SoccerTeamsManager();

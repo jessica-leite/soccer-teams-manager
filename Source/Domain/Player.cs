@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Source.Domain
 {
@@ -8,6 +9,8 @@ namespace Source.Domain
         public long TeamId { get; set; }
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
+
+        [Range(0, 100)]
         public int SkillLevel { get; set; }
         public decimal Salary { get; set; }
     }

@@ -33,7 +33,27 @@ namespace Codenation.Challenge
 
         public void AddPlayer(long id, long teamId, string name, DateTime birthDate, int skillLevel, decimal salary)
         {
-            throw new NotImplementedException();
+            if (Data.players.ContainsKey(id))
+            {
+                throw new UniqueIdentifierException();
+            }
+
+            if (!Data.teams.ContainsKey(teamId))
+            {
+                throw new TeamNotFoundException();
+            }
+
+            var player = new Player
+            {
+                Id = id,
+                TeamId = teamId,
+                Name = name,
+                BirthDate = birthDate,
+                SkillLevel = skillLevel,
+                Salary = salary
+            };
+
+            Data.players.Add(id, player);
         }
 
         public void SetCaptain(long playerId)
