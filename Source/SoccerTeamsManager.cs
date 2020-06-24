@@ -1,6 +1,7 @@
+using Source.Data;
+using Source.Domain;
 using System;
 using System.Collections.Generic;
-using Codenation.Challenge.Exceptions;
 
 namespace Codenation.Challenge
 {
@@ -12,7 +13,16 @@ namespace Codenation.Challenge
 
         public void AddTeam(long id, string name, DateTime createDate, string mainShirtColor, string secondaryShirtColor)
         {
-            throw new NotImplementedException();
+            var team = new Team
+            {
+                Id = id,
+                Name = name,
+                CreateDate = createDate,
+                MainShirtColor = mainShirtColor,
+                SecondaryShirtColor = secondaryShirtColor                
+            };
+
+            Data.teams.Add(id, team);
         }
 
         public void AddPlayer(long id, long teamId, string name, DateTime birthDate, int skillLevel, decimal salary)

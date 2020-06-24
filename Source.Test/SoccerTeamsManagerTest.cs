@@ -3,11 +3,13 @@ using System.Linq;
 using System.Collections.Generic;
 using Xunit;
 using Codenation.Challenge.Exceptions;
+using Source.Domain;
+using Source.Data;
 
 namespace Codenation.Challenge
 {
     public class SoccerTeamsManagerTest
-    {      
+    {
         [Fact]
         public void Should_Be_Unique_Ids_For_Teams()
         {
@@ -16,7 +18,7 @@ namespace Codenation.Challenge
             Assert.Throws<UniqueIdentifierException>(() =>
                 manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2"));
         }
- 
+
         [Fact]
         public void Should_Be_Valid_Player_When_Set_Captain()
         {
@@ -35,8 +37,8 @@ namespace Codenation.Challenge
             var manager = new SoccerTeamsManager();
             manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
 
-            var playersIds = new List<long>() {15, 2, 33, 4, 13};
-            for(int i = 0; i < playersIds.Count(); i++)
+            var playersIds = new List<long>() { 15, 2, 33, 4, 13 };
+            for (int i = 0; i < playersIds.Count(); i++)
                 manager.AddPlayer(playersIds[i], 1, $"Jogador {i}", DateTime.Today, 0, 0);
 
             playersIds.Sort();
@@ -53,7 +55,7 @@ namespace Codenation.Challenge
             manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
 
             var skillsLevelList = skills.Split(',').Select(x => int.Parse(x)).ToList();
-            for(int i = 0; i < skillsLevelList.Count(); i++)
+            for (int i = 0; i < skillsLevelList.Count(); i++)
                 manager.AddPlayer(i, 1, $"Jogador {i}", DateTime.Today, skillsLevelList[i], 0);
 
             Assert.Equal(bestPlayerId, manager.GetBestTeamPlayer(1));
@@ -75,6 +77,29 @@ namespace Codenation.Challenge
             manager.AddTeam(visitorTeamId, $"Time {visitorTeamId}", DateTime.Now, visitorColorList[0], visitorColorList[1]);
 
             Assert.Equal(visitorMatchColor, manager.GetVisitorShirtColor(teamId, visitorTeamId));
+        }
+
+        [Theory]
+        [InlineData(1, "Lions", "Orange", "Black")]
+        [InlineData(2, "Wizzards", "Purple", "White")]
+        [InlineData(3, "Potatoes", "Yellow", "Black")]
+        public void Should_Include_Team(long id, string name, string mainShirtColor, string secondaryShirtColor)
+        {
+            var date = DateTime.Now;
+
+            var team = new Team()
+            {
+                Id = id,
+                Name = name,
+                CreateDate = date,
+                MainShirtColor = mainShirtColor,
+                SecondaryShirtColor = secondaryShirtColor
+            };
+
+
+            new SoccerTeamsManager().AddTeam(id, name, date, mainShirtColor, secondaryShirtColor);
+
+            Assert.True(Data.teams.ContainsKey(id));
         }
     }
 }
