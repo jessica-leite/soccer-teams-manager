@@ -81,6 +81,16 @@ namespace Codenation.Challenge
         }
 
         [Fact]
+        public void Should_Return_Team_Name()
+        {
+            var manager = new SoccerTeamsManager();
+            manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
+            Assert.Equal("Time 1", manager.GetTeamName(1));
+            Assert.Throws<TeamNotFoundException>(() =>
+                manager.GetTeamName(2));
+        }
+
+        [Fact]
         public void Should_Ensure_Sort_Order_When_Get_Team_Players()
         {
             var manager = new SoccerTeamsManager();
