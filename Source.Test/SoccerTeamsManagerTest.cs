@@ -123,6 +123,22 @@ namespace Codenation.Challenge
         }
 
         [Theory]
+        [InlineData(1, 1, 1)]
+        [InlineData(2, 2, 2)]
+        [InlineData(3, 3, 3)]
+        public void Should_Return_Older_Team_Player(int teamId, int playerId, int yearsToAdd)
+        {
+            var manager = new SoccerTeamsManager();
+            manager.AddTeam(teamId, "Time 1", DateTime.Now, "cor 1", "cor 2");
+
+            manager.AddPlayer(playerId, 1, $"Jogador {playerId}", DateTime.Today.AddYears(yearsToAdd), 0, 0);
+
+            Assert.Equal(1, manager.GetOlderTeamPlayer(1));
+        }
+
+
+
+        [Theory]
         [InlineData("Azul;Vermelho", "Azul;Amarelo", "Amarelo")]
         [InlineData("Azul;Vermelho", "Amarelo;Laranja", "Amarelo")]
         [InlineData("Azul;Vermelho", "Azul;Vermelho", "Vermelho")]
