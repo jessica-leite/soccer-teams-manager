@@ -88,7 +88,12 @@ namespace Codenation.Challenge
 
         public string GetPlayerName(long playerId)
         {
-            throw new NotImplementedException();
+            if (!Data.players.ContainsKey(playerId))
+            {
+                throw new PlayerNotFoundException();
+            }
+
+            return Data.players[playerId].Name;
         }
 
         public string GetTeamName(long teamId)
