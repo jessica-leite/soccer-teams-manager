@@ -48,6 +48,26 @@ namespace Codenation.Challenge
             Assert.Throws<PlayerNotFoundException>(() =>
                 manager.SetCaptain(2));
         }
+        [Fact]
+        public void Should_Be_Valid_Team_When_Get_Captain()
+        {
+            var manager = new SoccerTeamsManager();
+            manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
+            manager.AddPlayer(1, 1, "Jogador 1", DateTime.Today, 0, 0);
+            manager.SetCaptain(1);
+            Assert.Equal(1, manager.GetTeamCaptain(1));
+            Assert.Throws<TeamNotFoundException>(() =>
+                manager.GetTeamCaptain(2));
+        }
+
+        [Fact]
+        public void Should_Exist_Captain_When_Get_Captain()
+        {
+            var manager = new SoccerTeamsManager();
+            manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
+            Assert.Throws<CaptainNotFoundException>(() =>
+                manager.GetTeamCaptain(1));
+        }
 
         [Fact]
         public void Should_Ensure_Sort_Order_When_Get_Team_Players()

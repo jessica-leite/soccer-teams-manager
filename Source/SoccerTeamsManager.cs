@@ -26,7 +26,7 @@ namespace Codenation.Challenge
                 Name = name,
                 CreateDate = createDate,
                 MainShirtColor = mainShirtColor,
-                SecondaryShirtColor = secondaryShirtColor                
+                SecondaryShirtColor = secondaryShirtColor
             };
 
             Data.teams.Add(id, team);
@@ -61,7 +61,7 @@ namespace Codenation.Challenge
         {
             if (!Data.players.ContainsKey(playerId))
             {
-                throw new CaptainNotFoundException();
+                throw new PlayerNotFoundException();
             }
 
             var teamId = Data.players[playerId].TeamId;
@@ -71,7 +71,19 @@ namespace Codenation.Challenge
 
         public long GetTeamCaptain(long teamId)
         {
-            throw new NotImplementedException();
+            if (!Data.teams.ContainsKey(teamId))
+            {
+                throw new TeamNotFoundException();
+            }
+
+            var captain = Data.teams[teamId].CaptainId;
+
+            if (captain == null)
+            {
+                throw new CaptainNotFoundException();
+            }
+
+            return (long)captain;
         }
 
         public string GetPlayerName(long playerId)

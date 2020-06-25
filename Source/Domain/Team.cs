@@ -9,6 +9,6 @@ namespace Source.Domain
         public DateTime CreateDate { get; set; }
         public string MainShirtColor { get; set; }
         public string SecondaryShirtColor { get; set; }
-        public long CaptainId { get; set; }
+        public long? CaptainId { get; set; }
     }
 }
