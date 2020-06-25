@@ -102,6 +102,8 @@ namespace Codenation.Challenge
 
             playersIds.Sort();
             Assert.Equal(playersIds, manager.GetTeamPlayers(1));
+            Assert.Throws<TeamNotFoundException>(() =>
+                manager.GetTeamPlayers(2));
         }
 
         [Theory]

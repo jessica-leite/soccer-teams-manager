@@ -102,13 +102,20 @@ namespace Codenation.Challenge
             {
                 throw new TeamNotFoundException();
             }
-            
+
             return Data.teams[teamId].Name;
         }
 
         public List<long> GetTeamPlayers(long teamId)
         {
-            throw new NotImplementedException();
+            if (!Data.teams.ContainsKey(teamId))
+            {
+                throw new TeamNotFoundException();
+            }
+
+            return Data.players.Where(player => player.Value.TeamId == teamId)
+                .Select(player => player.Key)
+                .ToList();
         }
 
         public long GetBestTeamPlayer(long teamId)
