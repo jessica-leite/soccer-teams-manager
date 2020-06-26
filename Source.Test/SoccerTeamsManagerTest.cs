@@ -84,7 +84,7 @@ namespace Codenation.Challenge
         {
             var manager = new SoccerTeamsManager();
             manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
-            manager.AddPlayer(1, 1, "Jogador 1", DateTime.Today, 0, 3900.78m) ;
+            manager.AddPlayer(1, 1, "Jogador 1", DateTime.Today, 0, 3900.78m);
             Assert.Equal(3900.78m, manager.GetPlayerSalary(1));
             Assert.Throws<PlayerNotFoundException>(() =>
                 manager.GetPlayerSalary(2));
@@ -116,20 +116,19 @@ namespace Codenation.Challenge
                 manager.GetTeamPlayers(2));
         }
 
-        [Theory]
-        [InlineData("10,20,300,40,50", 2)]
-        [InlineData("50,240,3,1,50", 1)]
-        [InlineData("10,22,24,3,24", 2)]
-        public void Should_Choose_Best_Team_Player(string skills, int bestPlayerId)
+        [Fact]
+        public void Should_Choose_Best_Team_Player()
         {
             var manager = new SoccerTeamsManager();
             manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
 
-            var skillsLevelList = skills.Split(',').Select(x => int.Parse(x)).ToList();
+            var skillsLevelList = new List<int>() { 10, 20, 300, 40, 50 };
             for (int i = 0; i < skillsLevelList.Count(); i++)
                 manager.AddPlayer(i, 1, $"Jogador {i}", DateTime.Today, skillsLevelList[i], 0);
 
-            Assert.Equal(bestPlayerId, manager.GetBestTeamPlayer(1));
+            Assert.Equal(2, manager.GetBestTeamPlayer(1));
+            Assert.Throws<TeamNotFoundException>(() => 
+                manager.GetBestTeamPlayer(2));
         }
 
         [Fact]

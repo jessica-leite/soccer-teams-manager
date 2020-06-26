@@ -120,7 +120,15 @@ namespace Codenation.Challenge
 
         public long GetBestTeamPlayer(long teamId)
         {
-            throw new NotImplementedException();
+            if (!Data.teams.ContainsKey(teamId))
+            {
+                throw new TeamNotFoundException();
+            }
+
+            return Data.players.Where(player => player.Value.TeamId == teamId)
+                .OrderByDescending(player => player.Value.SkillLevel)
+                .FirstOrDefault()
+                .Value.Id;
         }
 
         public long GetOlderTeamPlayer(long teamId)
