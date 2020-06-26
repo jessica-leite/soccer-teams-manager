@@ -132,8 +132,8 @@ namespace Codenation.Challenge
 
             return Data.players.Where(player => player.Value.TeamId == teamId)
                 .OrderBy(player => player.Value.BirthDate)
-                .Select(player => player.Value.Id)
-                .FirstOrDefault();
+                .FirstOrDefault()
+                .Value.Id;
         }
 
         public List<long> GetTeams()
@@ -143,12 +143,24 @@ namespace Codenation.Challenge
 
         public long GetHigherSalaryPlayer(long teamId)
         {
-            throw new NotImplementedException();
+            if (!Data.teams.ContainsKey(teamId))
+            {
+                throw new TeamNotFoundException();
+            }
+
+            return Data.players.OrderByDescending(player => player.Value.Salary)
+                .FirstOrDefault()
+                .Value.Id;
         }
 
         public decimal GetPlayerSalary(long playerId)
         {
-            throw new NotImplementedException();
+            if (!Data.players.ContainsKey(playerId))
+            {
+                throw new PlayerNotFoundException();
+            }
+
+            return Data.players[playerId].Salary;
         }
 
         public List<long> GetTopPlayers(int top)

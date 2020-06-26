@@ -79,6 +79,16 @@ namespace Codenation.Challenge
             Assert.Throws<PlayerNotFoundException>(() =>
                 manager.GetPlayerName(2));
         }
+        [Fact]
+        public void Should_Return_Player_Salary()
+        {
+            var manager = new SoccerTeamsManager();
+            manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
+            manager.AddPlayer(1, 1, "Jogador 1", DateTime.Today, 0, 3900.78m) ;
+            Assert.Equal(3900.78m, manager.GetPlayerSalary(1));
+            Assert.Throws<PlayerNotFoundException>(() =>
+                manager.GetPlayerSalary(2));
+        }
 
         [Fact]
         public void Should_Return_Team_Name()
@@ -142,7 +152,7 @@ namespace Codenation.Challenge
         public void Should_Return_Ordered_Teams()
         {
             var manager = new SoccerTeamsManager();
-           
+
             Assert.Empty(manager.GetTeams());
 
             var teamsIds = new List<long>() { 15, 2, 33, 4, 13 };
@@ -151,6 +161,23 @@ namespace Codenation.Challenge
 
             teamsIds.Sort();
             Assert.Equal(teamsIds, manager.GetTeams());
+        }
+
+        [Fact]
+        public void Should_Return_Higher_Salary_Player()
+        {
+            var manager = new SoccerTeamsManager();
+            manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
+
+            var salaryList = new List<decimal>() { 1000, 1500.98m, 2300.87m, 2300.87m };
+            for (int i = 0; i < salaryList.Count(); i++)
+            {
+                manager.AddPlayer(i, 1, $"Jogador {i}", DateTime.Today, 0, salaryList[i]);
+            }
+
+            Assert.Equal(2, manager.GetHigherSalaryPlayer(1));
+            Assert.Throws<TeamNotFoundException>(() =>
+                manager.GetHigherSalaryPlayer(2));
         }
 
         [Theory]
