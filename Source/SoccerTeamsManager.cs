@@ -177,12 +177,19 @@ namespace Codenation.Challenge
                 .Select(player => player.Value.Id)
                 .Take(3)
                 .ToList();
-                
         }
 
         public string GetVisitorShirtColor(long teamId, long visitorTeamId)
         {
-            throw new NotImplementedException();
+            if (!Data.teams.ContainsKey(teamId) || !Data.teams.ContainsKey(visitorTeamId))
+            {
+                throw new TeamNotFoundException();
+            }
+
+            var mainColorHome = Data.teams[teamId].MainShirtColor;
+            var mainColorVisitor = Data.teams[visitorTeamId].MainShirtColor;
+
+            return mainColorVisitor != mainColorHome ? mainColorVisitor : Data.teams[visitorTeamId].SecondaryShirtColor;
         }
 
     }

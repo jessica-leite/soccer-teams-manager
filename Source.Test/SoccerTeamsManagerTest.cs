@@ -199,13 +199,12 @@ namespace Codenation.Challenge
         }
 
         [Theory]
-        [InlineData("Azul;Vermelho", "Azul;Amarelo", "Amarelo")]
-        [InlineData("Azul;Vermelho", "Amarelo;Laranja", "Amarelo")]
-        [InlineData("Azul;Vermelho", "Azul;Vermelho", "Vermelho")]
-        public void Should_Choose_Right_Color_When_Get_Visitor_Shirt_Color(string teamColors, string visitorColors, string visitorMatchColor)
+        [InlineData(1, "Azul;Vermelho", "Azul;Amarelo", "Amarelo")]
+        [InlineData(2, "Azul;Vermelho", "Amarelo;Laranja", "Amarelo")]
+        [InlineData(3, "Azul;Vermelho", "Azul;Vermelho", "Vermelho")]
+        public void Should_Choose_Right_Color_When_Get_Visitor_Shirt_Color(long teamId, string teamColors, string visitorColors, string visitorMatchColor)
         {
-            long teamId = 1;
-            long visitorTeamId = 2;
+            long visitorTeamId = teamId * 5;
             var teamColorList = teamColors.Split(";");
             var visitorColorList = visitorColors.Split(";");
 
