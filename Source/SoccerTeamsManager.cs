@@ -138,7 +138,7 @@ namespace Codenation.Challenge
 
         public List<long> GetTeams()
         {
-            throw new NotImplementedException();
+            return Data.teams.Select(team => team.Value.Id).ToList();
         }
 
         public long GetHigherSalaryPlayer(long teamId)

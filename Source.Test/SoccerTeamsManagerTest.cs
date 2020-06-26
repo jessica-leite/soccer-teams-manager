@@ -122,21 +122,36 @@ namespace Codenation.Challenge
             Assert.Equal(bestPlayerId, manager.GetBestTeamPlayer(1));
         }
 
-        [Theory]
-        [InlineData(1, 1, 1)]
-        [InlineData(2, 2, 2)]
-        [InlineData(3, 3, 3)]
-        public void Should_Return_Older_Team_Player(int teamId, int playerId, int yearsToAdd)
+        [Fact]
+        public void Should_Return_Older_Team_Player()
         {
             var manager = new SoccerTeamsManager();
-            manager.AddTeam(teamId, "Time 1", DateTime.Now, "cor 1", "cor 2");
+            manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
 
-            manager.AddPlayer(playerId, 1, $"Jogador {playerId}", DateTime.Today.AddYears(yearsToAdd), 0, 0);
+            for (int i = 1; i <= 3; i++)
+            {
+                manager.AddPlayer(i, 1, $"Jogador {i}", DateTime.Today.AddYears(i), 0, 0);
+            }
 
             Assert.Equal(1, manager.GetOlderTeamPlayer(1));
+            Assert.Throws<TeamNotFoundException>(() =>
+                manager.GetOlderTeamPlayer(2));
         }
 
+        [Fact]
+        public void Should_Return_Ordered_Teams()
+        {
+            var manager = new SoccerTeamsManager();
+           
+            Assert.Empty(manager.GetTeams());
 
+            var teamsIds = new List<long>() { 15, 2, 33, 4, 13 };
+            for (int i = 0; i < teamsIds.Count(); i++)
+                manager.AddTeam(teamsIds[i], $"Team {i}", DateTime.Today, "", "");
+
+            teamsIds.Sort();
+            Assert.Equal(teamsIds, manager.GetTeams());
+        }
 
         [Theory]
         [InlineData("Azul;Vermelho", "Azul;Amarelo", "Amarelo")]
