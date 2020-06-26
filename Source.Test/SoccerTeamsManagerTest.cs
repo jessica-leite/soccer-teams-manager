@@ -127,7 +127,7 @@ namespace Codenation.Challenge
                 manager.AddPlayer(i, 1, $"Jogador {i}", DateTime.Today, skillsLevelList[i], 0);
 
             Assert.Equal(2, manager.GetBestTeamPlayer(1));
-            Assert.Throws<TeamNotFoundException>(() => 
+            Assert.Throws<TeamNotFoundException>(() =>
                 manager.GetBestTeamPlayer(2));
         }
 
@@ -145,6 +145,25 @@ namespace Codenation.Challenge
             Assert.Equal(1, manager.GetOlderTeamPlayer(1));
             Assert.Throws<TeamNotFoundException>(() =>
                 manager.GetOlderTeamPlayer(2));
+        }
+
+        [Fact]
+        public void Should_Return_Top_Players()
+        {
+            var manager = new SoccerTeamsManager();
+
+            Assert.Empty(manager.GetTopPlayers(3));
+
+            manager.AddTeam(1, "Time 1", DateTime.Now, "cor 1", "cor 2");
+
+
+            var skillsLevelList = new List<int>() { 10, 20, 40, 40, 50 };
+            for (int i = 1; i < skillsLevelList.Count(); i++)
+            {
+                manager.AddPlayer(i, 1, $"Jogador {i}", DateTime.Today, skillsLevelList[i], 0);
+            }
+
+            Assert.Equal(new List<long>() { 4, 2, 3 }, manager.GetTopPlayers(3));
         }
 
         [Fact]

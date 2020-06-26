@@ -173,7 +173,11 @@ namespace Codenation.Challenge
 
         public List<long> GetTopPlayers(int top)
         {
-            throw new NotImplementedException();
+            return Data.players.OrderByDescending(player => player.Value.SkillLevel)
+                .Select(player => player.Value.Id)
+                .Take(3)
+                .ToList();
+                
         }
 
         public string GetVisitorShirtColor(long teamId, long visitorTeamId)
