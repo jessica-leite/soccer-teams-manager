@@ -1,10 +1,8 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Xunit;
 using Codenation.Challenge.Exceptions;
-using Source.Domain;
-using Source.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace Codenation.Challenge
 {
@@ -213,6 +211,8 @@ namespace Codenation.Challenge
             manager.AddTeam(visitorTeamId, $"Time {visitorTeamId}", DateTime.Now, visitorColorList[0], visitorColorList[1]);
 
             Assert.Equal(visitorMatchColor, manager.GetVisitorShirtColor(teamId, visitorTeamId));
+            Assert.Throws<TeamNotFoundException>(() => 
+                manager.GetVisitorShirtColor(teamId, 100));
         }
 
         [Theory]
@@ -221,21 +221,10 @@ namespace Codenation.Challenge
         [InlineData(3, "Potatoes", "Yellow", "Black")]
         public void Should_Include_Team(long id, string name, string mainShirtColor, string secondaryShirtColor)
         {
-            var date = DateTime.Now;
+            var manager = new SoccerTeamsManager();
+            manager.AddTeam(id, name, DateTime.Today, mainShirtColor, secondaryShirtColor);
 
-            var team = new Team()
-            {
-                Id = id,
-                Name = name,
-                CreateDate = date,
-                MainShirtColor = mainShirtColor,
-                SecondaryShirtColor = secondaryShirtColor
-            };
-
-
-            new SoccerTeamsManager().AddTeam(id, name, date, mainShirtColor, secondaryShirtColor);
-
-            Assert.True(Data.teams.ContainsKey(id));
+            Assert.Contains(id, manager.GetTeams());
         }
     }
 }

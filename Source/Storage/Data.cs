@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Source.Data
 {
-    public static class Data
+    public class Data
     {
-        public static IDictionary<long, Team> teams = new SortedDictionary<long, Team>();
-        public static IDictionary<long, Player> players = new SortedDictionary<long, Player>();
+        public IDictionary<long, Team> teams = new SortedDictionary<long, Team>();
+        public IDictionary<long, Player> players = new SortedDictionary<long, Player>();
     }
 }
