@@ -1,5 +1,4 @@
 using Codenation.Challenge.Exceptions;
-using Source.Data;
 using Source.Domain;
 using System;
 using System.Collections.Generic;
@@ -9,15 +8,12 @@ namespace Codenation.Challenge
 {
     public class SoccerTeamsManager : IManageSoccerTeams
     {
-        private Data _data;
-        public SoccerTeamsManager()
-        {
-            _data = new Data();
-        }
+        private IDictionary<long, Team> _teams = new SortedDictionary<long, Team>();
+        private IDictionary<long, Player> _players = new SortedDictionary<long, Player>();
 
         public void AddTeam(long id, string name, DateTime createDate, string mainShirtColor, string secondaryShirtColor)
         {
-            if (_data.teams.ContainsKey(id))
+            if (_teams.ContainsKey(id))
             {
                 throw new UniqueIdentifierException();
             }
@@ -31,12 +27,12 @@ namespace Codenation.Challenge
                 SecondaryShirtColor = secondaryShirtColor
             };
 
-            _data.teams.Add(id, team);
+            _teams.Add(id, team);
         }
 
         public void AddPlayer(long id, long teamId, string name, DateTime birthDate, int skillLevel, decimal salary)
         {
-            if (_data.players.ContainsKey(id))
+            if (_players.ContainsKey(id))
             {
                 throw new UniqueIdentifierException();
             }
@@ -53,23 +49,23 @@ namespace Codenation.Challenge
                 Salary = salary
             };
 
-            _data.players.Add(id, player);
+            _players.Add(id, player);
         }
 
         public void SetCaptain(long playerId)
         {
             ThrowExceptionIfPlayerNotExists(playerId);
 
-            var teamId = _data.players[playerId].TeamId;
+            var teamId = _players[playerId].TeamId;
 
-            _data.teams[teamId].CaptainId = playerId;
+            _teams[teamId].CaptainId = playerId;
         }
 
         public long GetTeamCaptain(long teamId)
         {
             ThrowExceptionIfTeamsNotExists(teamId);
 
-            var captain = _data.teams[teamId].CaptainId;
+            var captain = _teams[teamId].CaptainId;
 
             if (captain == null)
             {
@@ -83,21 +79,21 @@ namespace Codenation.Challenge
         {
             ThrowExceptionIfPlayerNotExists(playerId);
 
-            return _data.players[playerId].Name;
+            return _players[playerId].Name;
         }
 
         public string GetTeamName(long teamId)
         {
             ThrowExceptionIfTeamsNotExists(teamId);
 
-            return _data.teams[teamId].Name;
+            return _teams[teamId].Name;
         }
 
         public List<long> GetTeamPlayers(long teamId)
         {
             ThrowExceptionIfTeamsNotExists(teamId);
 
-            return _data.players.Where(player => player.Value.TeamId == teamId)
+            return _players.Where(player => player.Value.TeamId == teamId)
                 .Select(player => player.Key)
                 .ToList();
         }
@@ -106,7 +102,7 @@ namespace Codenation.Challenge
         {
             ThrowExceptionIfTeamsNotExists(teamId);
 
-            return _data.players.Where(player => player.Value.TeamId == teamId)
+            return _players.Where(player => player.Value.TeamId == teamId)
                 .OrderByDescending(player => player.Value.SkillLevel)
                 .FirstOrDefault()
                 .Value.Id;
@@ -116,7 +112,7 @@ namespace Codenation.Challenge
         {
             ThrowExceptionIfTeamsNotExists(teamId);
 
-            return _data.players.Where(player => player.Value.TeamId == teamId)
+            return _players.Where(player => player.Value.TeamId == teamId)
                 .OrderBy(player => player.Value.BirthDate)
                 .FirstOrDefault()
                 .Value.Id;
@@ -124,14 +120,14 @@ namespace Codenation.Challenge
 
         public List<long> GetTeams()
         {
-            return _data.teams.Select(team => team.Value.Id).ToList();
+            return _teams.Select(team => team.Value.Id).ToList();
         }
 
         public long GetHigherSalaryPlayer(long teamId)
         {
             ThrowExceptionIfTeamsNotExists(teamId);
 
-            return _data.players.OrderByDescending(player => player.Value.Salary)
+            return _players.OrderByDescending(player => player.Value.Salary)
                 .FirstOrDefault()
                 .Value.Id;
         }
@@ -140,14 +136,14 @@ namespace Codenation.Challenge
         {
             ThrowExceptionIfPlayerNotExists(playerId);
 
-            return _data.players[playerId].Salary;
+            return _players[playerId].Salary;
         }
 
         public List<long> GetTopPlayers(int top)
         {
-            return _data.players.OrderByDescending(player => player.Value.SkillLevel)
+            return _players.OrderByDescending(player => player.Value.SkillLevel)
                 .Select(player => player.Value.Id)
-                .Take(3)
+                .Take(top)
                 .ToList();
         }
 
@@ -155,15 +151,15 @@ namespace Codenation.Challenge
         {
             ThrowExceptionIfTeamsNotExists(teamId, visitorTeamId);
 
-            var mainColorHome = _data.teams[teamId].MainShirtColor;
-            var mainColorVisitor = _data.teams[visitorTeamId].MainShirtColor;
+            var mainColorHome = _teams[teamId].MainShirtColor;
+            var mainColorVisitor = _teams[visitorTeamId].MainShirtColor;
 
-            return mainColorVisitor != mainColorHome ? mainColorVisitor : _data.teams[visitorTeamId].SecondaryShirtColor;
+            return mainColorVisitor != mainColorHome ? mainColorVisitor : _teams[visitorTeamId].SecondaryShirtColor;
         }
 
         private void ThrowExceptionIfPlayerNotExists(long id)
         {
-            if (!_data.players.ContainsKey(id))
+            if (!_players.ContainsKey(id))
             {
                 throw new PlayerNotFoundException();
             }
@@ -173,7 +169,7 @@ namespace Codenation.Challenge
         {
             foreach (var id in ids)
             {
-                if (!_data.teams.ContainsKey(id))
+                if (!_teams.ContainsKey(id))
                 {
                     throw new TeamNotFoundException();
                 }
